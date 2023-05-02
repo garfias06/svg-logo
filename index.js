@@ -4,7 +4,10 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const createSvg = require('./lib/shapes')
+// Importing modules
+const { Circle, Triangle, Square } = require('./lib/shapes')
+
+const SVG = require('./lib/svg')
 
 // svg size:300x200 px
 
@@ -42,18 +45,39 @@ const shapeSpecs = [
 // when done with questions:
 // create SVG FILE and name it: logo.svg
 // console.log:Generated logo.svg
-function writeToFile(fileName, data) {
-    fs.writeFile(fileName, data, (err) => err ? console.error(err) : console.log('Generated logo.svg'))
-}
+
+
 
 function createNewFile() {
     inquirer.prompt(shapeSpecs)
         .then((data) => {
-            console.log(data)
-            writeToFile('./examples/logo.svg', createSvg(data))
+            let chosenShape;
+            switch (data.shape) {
+                case 'circle':
+                    chosenShape = new Circle()
+                    break;
+                case 'triangle':
+                    chosenShape = new Triangle()
+                    break;
+                default:
+                    chosenShape = new Square()
+            }
+
+            chosenShape.setColor(data.shapeColor)
+
+            const newSvg = new SVG()
+
+            newSvg.setUserShape(chosenShape)
+            newSvg.grabText(data.textColor, data.text)
+
+            fs.writeFile('logo.svg', newSvg.renderSVG(), (err, res) => {
+                if (err) throw err
+                console.log('SVG created!!')
+            })
+
         })
 }
 
 createNewFile();
 
-// importing and exporting modules
+
