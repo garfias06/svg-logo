@@ -70,11 +70,10 @@ function createNewFile() {
             newSvg.setUserShape(chosenShape)
             newSvg.grabText(data.textColor, data.text)
 
-            fs.writeFile('logo.svg', newSvg.renderSVG(), (err, res) => {
+            fs.writeFile('./examples/logo.svg', newSvg.renderSVG(), (err, res) => {
                 if (err) throw err
                 console.log('SVG created!!')
             })
-
         })
 }
 
