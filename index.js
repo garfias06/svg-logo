@@ -4,7 +4,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const logoMaker = require('./lib/shapes')
+const createSvg = require('./lib/shapes')
 
 // svg size:300x200 px
 
@@ -25,33 +25,35 @@ const shapeSpecs = [
         type: 'input',
         message: 'Enter a background color:',
         name: 'shapeColor',
-      },
-      {
+    },
+    {
         type: 'input',
         message: 'Text, enter up to three characters:',
         name: 'text',
-      },
-      {
+    },
+    {
         type: 'input',
         message: 'Enter text color:',
         name: 'textColor',
-      },
+    },
 ];
 
+// !./examples/logo.svg
 // when done with questions:
 // create SVG FILE and name it: logo.svg
 // console.log:Generated logo.svg
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, (err) => err ? console.error(err) : console.log('Generated logo.svg'))
+}
 
-function createNewFile(){
+function createNewFile() {
     inquirer.prompt(shapeSpecs)
-    .then((data) => {
-      console.log(data)
-      writeToFile('logo.svg', logoMaker(data))
-    })
+        .then((data) => {
+            console.log(data)
+            writeToFile('./examples/logo.svg', createSvg(data))
+        })
 }
-function writeToFile(logo, data){
-    fs.writeFile(logo, data, (err) => err ? console.error(err) : console.log('Generated logo.svg'))
-}
+
 createNewFile();
 
 // importing and exporting modules
